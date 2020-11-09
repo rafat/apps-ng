@@ -22,7 +22,7 @@ const ButtonWrapper = styled.div`
  */
 const AppHeader = () => (
   <Container>
-    <h1>Hello World!</h1>
+    <h1>MNEMONIC STORAGE</h1>
   </Container>
 )
 
@@ -32,20 +32,19 @@ const AppHeader = () => (
 const AppBody = observer(() => {
   const { appRuntime, helloworldApp } = useStore();
   const [, setToast] = useToasts()
-  const { state: inc, bindings } = useInput('1')
+  const { state: mnemonic, bindings } = useInput('')
 
   /**
    * Updates the counter by querying the helloworld contract
    * The type definitions of `GetCount` request and response can be found at contract/helloworld.rs
    */
-  async function updateCounter () {
+  async function updateMnemonic () {
     if (!helloworldApp) return
     try {
-      const response = await helloworldApp.queryCounter(appRuntime)
-      // Print the response in the original to the console
-      console.log('Response::GetCount', response);
+      const response = await helloworldApp.queryMnemonic(appRuntime)
+     
 
-      helloworldApp.setCounter(response.GetCount.count)
+      helloworldApp.setMnemonic(response.GetMnemonic.mnemonic)
     } catch (err) {
       setToast(err.message, 'error')
     }
@@ -55,18 +54,13 @@ const AppBody = observer(() => {
    * The `increment` transaction payload object
    * It follows the command type definition of the contract (at contract/helloworld.rs)
    */
-  const incrementCommandPayload = useMemo(() => {
-    const num = parseInt(inc)
-    if (isNaN(num) || inc <= 0) {
-      return undefined
-    } else {
-      return {
-        Increment: {
-          value: num
-        }
-      }
-    }
-  }, [inc])
+  const setMnemonicPayload = useMemo(() => {
+	return {
+		setMnemonic: {
+			mnemonic: mnemonic
+		}
+	}
+  }, [mnemonic])
 
   return (
     <Container>
@@ -77,17 +71,17 @@ const AppBody = observer(() => {
       </section>
       <Spacer y={1}/>
 
-      <h3>Counter</h3>
+      <h3>Check Wallet Mnemonic</h3>
       <section>
-        <div>Counter: {helloworldApp.counter === null ? 'unknown' : helloworldApp.counter}</div>
-        <div><Button onClick={updateCounter}>Update</Button></div>
+        <div>Mnemonic: {helloworldApp.mnemonic === null ? 'unknown' : helloworldApp.mnemonic}</div>
+        <div><Button onClick={updateMnemonic}>Update</Button></div>
       </section>
       <Spacer y={1}/>
 
-      <h3>Increment Counter</h3>
+      <h3>Update Mnemonic</h3>
       <section>
         <div>
-          <Input label="By" {...bindings} />
+          <Input label="Change Mnemonic" {...bindings} />
         </div>
         <ButtonWrapper>
           {/**  
@@ -97,15 +91,15 @@ const AppBody = observer(() => {
           <PushCommandButton
               // tx arguments
               contractId={CONTRACT_HELLOWORLD}
-              payload={incrementCommandPayload}
+              payload={setMnemonicPayload}
               // display messages
-              modalTitle='HelloWorld.Increament()'
-              modalSubtitle={`Increment the counter by ${inc}`}
+              modalTitle='WALLET MNEMONIC'
+              modalSubtitle={`Change to ${mnemonic}`}
               onSuccessMsg='Tx succeeded'
               // button appearance
               buttonType='secondaryLight'
               icon={PlusIcon}
-              name='Send'
+              name='Update'
             />
         </ButtonWrapper>
       </section>

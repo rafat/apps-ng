@@ -5,14 +5,14 @@ export const CONTRACT_HELLOWORLD = 5;
 export const createHelloWorldAppStore = (defaultValue = {}, options = {}) => {
   const HelloWorldAppStore = types
     .model('HelloWorldAppStore', {
-      counter: types.maybeNull(types.number)
+      mnemonic: types.maybeNull(types.string)
     })
     .actions(self => ({
-      setCounter (num) {
-        self.counter = num
+      setMnemonic (mnemonic) {
+        self.mnemonic = mnemonic
       },
-      async queryCounter (runtime) {
-        return await runtime.query(CONTRACT_HELLOWORLD, 'GetCount')
+      async queryMnemonic (runtime) {
+        return await runtime.query(CONTRACT_HELLOWORLD, 'GetMnemonic')
       }
     }))
 
