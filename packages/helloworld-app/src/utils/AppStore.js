@@ -8,7 +8,7 @@ export const createHelloWorldAppStore = (defaultValue = {}, options = {}) => {
       mnemonic: types.maybeNull(types.string)
     })
     .actions(self => ({
-      setMnemonic (mnemonic) {
+      SetMnemonic (mnemonic) {
         self.mnemonic = mnemonic
       },
       async queryMnemonic (runtime) {

@@ -56,7 +56,7 @@ const AppBody = observer(() => {
    */
   const setMnemonicPayload = useMemo(() => {
 	return {
-		setMnemonic: {
+		SetMnemonic: {
 			mnemonic: mnemonic
 		}
 	}
